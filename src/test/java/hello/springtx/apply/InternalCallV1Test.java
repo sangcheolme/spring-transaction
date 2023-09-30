@@ -1,6 +1,5 @@
 package hello.springtx.apply;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,60 +13,41 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 @SpringBootTest
 public class InternalCallV1Test {
 
-    //CallService 객체에는 @Transactional이 있기 때문에 프록시가 빈으로 등록됨
-    @Autowired CallService callService;
+    @Autowired
+    private CallService callService;
 
     @Test
     void printProxy() {
         log.info("callService class={}", callService.getClass());
     }
 
-//    @Test
-//    void internalCall() {
-//        //callService.internal();
-//        internalService.internal();
-//    }
+    @Test
+    void internalCall() {
+        callService.internal();
+    }
 
     @Test
-    void externalCallV2() {
+    void externalCall() {
         callService.external();
     }
 
     @TestConfiguration
-    static class InternalCallV1TestConfig {
+    static class InternalCallV2Config {
 
         @Bean
         public CallService callService() {
-            return new CallService(internalService());
-        }
-
-        @Bean
-        public InternalService internalService() {
-            return new InternalService();
+            return new CallService();
         }
     }
 
-
     @Slf4j
-    @RequiredArgsConstructor
     static class CallService {
-
-        private final InternalService internalService;
 
         public void external() {
             log.info("call external");
             printTxInfo();
-            internalService.internal();
+            internal();
         }
-
-        private void printTxInfo() {
-            boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
-            log.info("tx Active={}", txActive);
-        }
-    }
-
-    @Slf4j
-    static class InternalService {
 
         @Transactional
         public void internal() {
@@ -76,8 +56,9 @@ public class InternalCallV1Test {
         }
 
         private void printTxInfo() {
-            boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
-            log.info("tx Active={}", txActive);
+            boolean txActive
+                    = TransactionSynchronizationManager.isActualTransactionActive();
+            log.info("tx active={}", txActive);
         }
     }
 
