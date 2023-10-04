@@ -23,10 +23,12 @@ public class OrderService {
         if (order.getUsername().equals("예외")) {
             log.info("시스템 예외 발생");
             throw new RuntimeException("시스템 예외");
+
         } else if (order.getUsername().equals("잔고부족")) {
             log.info("잔고 부족 비즈니스 예외");
             order.setPayStatus("대기");
             throw new NotEnoughMoneyException("잔고가 부족합니다.");
+
         } else {
             log.info("정상 승인");
             order.setPayStatus("완료");
