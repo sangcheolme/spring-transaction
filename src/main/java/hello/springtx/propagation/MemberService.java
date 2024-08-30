@@ -1,9 +1,10 @@
 package hello.springtx.propagation;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -13,7 +14,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final LogRepository logRepository;
 
-    @Transactional
+    @Transactional // 추가
     public void joinV1(String username) {
         Member member = new Member(username);
         Log logMessage = new Log(username);
@@ -40,7 +41,7 @@ public class MemberService {
         try {
             logRepository.save(logMessage);
         } catch (RuntimeException e) {
-            log.info("로그 저장에 실패했습니다. logMessage={}", logMessage);
+            log.info("로그 저장에 실패했습니다. logMessage={}", logMessage.getMessage());
             log.info("정상 흐름 반환");
         }
         log.info("== logRepository 호출 종료 == ");

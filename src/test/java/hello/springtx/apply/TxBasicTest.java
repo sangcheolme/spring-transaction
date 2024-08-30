@@ -1,6 +1,7 @@
 package hello.springtx.apply;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
@@ -44,15 +45,13 @@ public class TxBasicTest {
         @Transactional
         public void tx() {
             log.info("call tx");
-            boolean txActive
-                    = TransactionSynchronizationManager.isActualTransactionActive();
+            boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
             log.info("tx Active={}", txActive);
         }
 
         public void notTx() {
             log.info("call notTx");
-            boolean txActive
-                    = TransactionSynchronizationManager.isActualTransactionActive();
+            boolean txActive = TransactionSynchronizationManager.isActualTransactionActive();
             log.info("tx Active={}", txActive);
         }
     }
